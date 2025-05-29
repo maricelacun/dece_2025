@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ficha de Entrevista Estudiantil - U.E. Dr. Camilo Gallegos Domínguez</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/html-docx-js/dist/html-docx.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #E0F2FE; /* Tailwind sky-100 - Un azul cielo muy claro */
+            margin: 0;
+            padding: 0;
+        }
+
+        .page-banner {
+            background: linear-gradient(90deg, #1E3A8A 0%, #2563EB 30%, #FACC15 70%, #F59E0B 100%); /* Azul oscuro -> Azul -> Amarillo -> Naranja/Amarillo oscuro */
+            padding: 2rem 1rem;
+            text-align: center;
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            position: relative; /* Para la onda si se implementa */
+        }
+
+        .page-banner h1 {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 800; /* font-extrabold */
+            margin: 0;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .page-banner p {
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 500; /* font-medium */
+            margin-top: 0.25rem;
+            opacity: 0.9;
+        }
+        
+        /* Contenedor principal de la tarjeta del formulario */
+        .main-form-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Alinea la tarjeta arriba si el contenido es largo */
+            padding: 2rem 1rem; /* Espacio arriba/abajo y a los lados */
+            min-height: calc(100vh - 150px); /* Ajustar según altura del banner */
+        }
+
+        /* Tarjeta principal del formulario */
+        .form-card {
+            background-color: white;
+            border-radius: 1rem; /* Esquinas más redondeadas */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 56rem; /* text-5xl, un poco más ancho para el contenido */
+            padding: 2rem; /* Espaciado interno */
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-header img { /* Sello */
+            width: 80px; /* Más pequeño como en la imagen */
+            height: 80px;
+            margin: 0 auto 0.75rem auto;
+        }
+
+        .form-main-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 700; /* font-bold */
+            color: #1E3A8A; /* Azul oscuro */
+            margin-bottom: 0.25rem;
+        }
+        
+        .form-subtitle {
+            font-size: 0.875rem; /* text-sm */
+            color: #4B5563; /* gray-600 */
+            margin-bottom: 1.5rem;
+        }
+
+        .info-grid { /* Para datos informativos */
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem; /* Espacio entre elementos */
+            margin-bottom: 2rem;
+        }
+        @media (min-width: 768px) { /* md breakpoint */
+            .info-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 1.5rem;
+            }
+        }
+        .info-grid label {
+            font-weight: 500; /* font-medium */
+            color: #374151; /* gray-700 */
+        }
+        .info-grid p, .info-grid select {
+            margin-top: 0.25rem;
+            font-size: 1rem; /* text-base */
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #D1D5DB; /* gray-300 */
+            border-radius: 0.375rem; /* rounded-md */
+            width: 100%;
+        }
+        .info-grid select {
+             background-color: #F9FAFB; /* gray-50 */
+        }
+        .info-grid p { /* Para texto estático como fecha y entrevistador */
+            background-color: #F3F4F6; /* gray-100 */
+        }
+
+
+        /* Estilo para los títulos de COMPONENTES */
+        .component-section {
+            background-color: #DBEAFE; /* Tailwind blue-200 */
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem; /* rounded-lg */
+            margin-bottom: 1.5rem;
+            border-left: 5px solid #2563EB; /* Tailwind blue-600 */
+        }
+        .component-title {
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 600; /* font-semibold */
+            color: #1E3A8A; /* Tailwind blue-800 */
+            margin: 0;
+        }
+
+        /* Estilo para los títulos de HABILIDADES/GRUPOS DE PREGUNTAS */
+        .skill-group {
+            background-color: #FEF9C3; /* Tailwind yellow-100 */
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.5rem; /* rounded-lg */
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #F59E0B; /* Tailwind amber-500 */
+        }
+        .skill-title {
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 500; /* font-medium */
+            color: #713F12; /* Tailwind amber-800 */
+        }
+        .skill-objective {
+            font-size: 0.875rem; /* text-sm */
+            color: #78350F; /* Tailwind amber-900 */
+            font-style: italic;
+            margin-top: 0.25rem;
+            margin-bottom: 0.75rem;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #D1D5DB; /* gray-300 */
+            border-radius: 0.375rem; /* rounded-md */
+            transition: all 0.3s ease-in-out;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.075);
+        }
+        textarea:focus {
+            border-color: #2563EB; /* blue-600 */
+            box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25); /* Anillo de foco azul */
+            outline: none;
+        }
+        .question-label {
+            display: block;
+            font-size: 0.95rem; /* Un poco más grande */
+            font-weight: 500; /* font-medium */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 0.5rem;
+        }
+
+        /* Contenedor para los botones */
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            gap: 1rem; /* Espacio entre botones */
+            margin-top: 2.5rem; /* mt-10 */
+            flex-wrap: wrap; /* Para que los botones se ajusten en pantallas pequeñas */
+        }
+
+        /* Botón genérico */
+        .action-button {
+            color: white;
+            font-weight: 600; /* font-semibold */
+            padding: 0.75rem 2rem; /* Más padding */
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2), 0 2px 4px -1px rgba(0,0,0,0.12);
+            transition: all 0.2s ease-in-out;
+            border: none;
+            cursor: pointer;
+        }
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px -1px rgba(0,0,0,0.25), 0 4px 6px -1px rgba(0,0,0,0.15);
+        }
+
+        /* Botón de descarga */
+        .download-button {
+            background: linear-gradient(90deg, #2563EB, #1D4ED8); /* Gradiente azul */
+        }
+        .download-button:hover {
+            background: linear-gradient(90deg, #1D4ED8, #1E3A8A); /* Gradiente más oscuro al pasar el mouse */
+        }
+        
+        /* Botón de Limpiar */
+        .clear-button {
+            background: linear-gradient(90deg, #F59E0B, #D97706); /* Gradiente amarillo/naranja */
+        }
+        .clear-button:hover {
+             background: linear-gradient(90deg, #D97706, #B45309); /* Gradiente más oscuro al pasar el mouse */
+        }
+
+        .download-note {
+            text-align: center;
+            margin-top: 1rem; /* Espacio sobre la nota */
+            font-size: 0.75rem; /* text-xs */
+            color: #6B7280; /* gray-500 */
+        }
+
+        /* Estilos para el contenido que se exportará a Word (se mantienen de la versión anterior) */
+        #interviewContentForWordExport { /* ID cambiado para evitar confusión con el div visible */
+            font-family: Arial, sans-serif;
+            font-size: 12pt;
+            color: #000000;
+        }
+        #interviewContentForWordExport h1, #interviewContentForWordExport h2, #interviewContentForWordExport h3, #interviewContentForWordExport h4 {
+            color: #000000;
+        }
+        #interviewContentForWordExport .school-seal-word {
+            width: 100px; height: 100px; display: block; margin-left: auto; margin-right: auto; margin-bottom: 10px;
+        }
+        #interviewContentForWordExport .school-name-word {
+            text-align: center; font-size: 16pt; font-weight: bold; margin-bottom: 20px;
+        }
+        #interviewContentForWordExport .info-item-word { margin-bottom: 8px; font-size: 11pt; }
+        #interviewContentForWordExport .section-title-word { font-size: 14pt; font-weight: bold; margin-top: 15px; margin-bottom: 10px; border-bottom: 1px solid #000000; padding-bottom: 3px; }
+        #interviewContentForWordExport .question-group-title-word { font-size: 12pt; font-weight: bold; margin-top: 10px; margin-bottom: 5px; }
+        #interviewContentForWordExport .question-objective-word,
+        #interviewContentForWordExport .question-label-word { font-size: 11pt; margin-bottom: 3px; }
+        #interviewContentForWordExport .answer-space-word { width: 100%; border: 1px solid #cccccc; min-height: 60px; margin-bottom: 10px; padding: 5px; background-color: #f9f9f9; }
+    </style>
+</head>
+<body>
+
+    <div class="page-banner">
+        <h1>UNIDAD EDUCATIVA DR. CAMILO GALLEGOS DOMÍNGUEZ</h1>
+        <p>Entrevistas Estudiantiles</p>
+    </div>
+
+    <div class="main-form-container">
+        <div class="form-card">
+            <div id="interviewContentVisible">
+                <header class="form-header">
+                    <img src="https://placehold.co/100x100/FFFFFF/1E3A8A?text=SELLO" alt="Sello del Colegio" id="schoolSeal">
+                    <h2 class="form-main-title">CUESTIONARIO PARA LA ENTREVISTA</h2>
+                    <p class="form-subtitle">Nivel Bachillerato - Tercero de Bachillerato Técnico en Informática "B"</p>
+                </header>
+
+                <hr class="my-6 border-gray-200">
+
+                <section id="datosInformativos" class="mb-8">
+                    <div class="info-grid">
+                        <div>
+                            <label class="block">Fecha de la entrevista:</label>
+                            <p id="interviewDate">Jueves, 29 de mayo del 2025</p>
+                        </div>
+                        <div>
+                            <label class="block">Entrevistador/a:</label>
+                            <p id="interviewerName">Mgs. Maricela de Jesus Cun Rueda</p>
+                        </div>
+                        <div>
+                            <label for="studentName" class="block">Nombre del estudiante:</label>
+                            <select id="studentName" name="studentName">
+                                <option value="">Seleccione un estudiante</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block">Curso:</label>
+                            <p id="studentCourse">Tercero de Bachillerato Técnico en Informática "B"</p>
+                        </div>
+                    </div>
+                </section>
+                
+                <div id="interviewQuestionsContainer">
+                    </div>
+            </div>
+
+            <div class="buttons-container">
+                <button id="clearButton" class="action-button clear-button">
+                    Limpiar Formulario
+                </button>
+                <button id="downloadButton" class="action-button download-button">
+                    Descargar en Word
+                </button>
+            </div>
+            <p class="download-note">Nota: La longitud del documento Word final dependerá de la extensión de las respuestas.</p>
+        </div>
+    </div>
+
+    <script>
+        const studentList = [
+            "AGILA GUTIERREZ BRITTANY PAOLA", "CAJAMARCA PEÑAFIEL DARWIN ALEXANDER", "CAMACHO RODRIGUEZ LUZ MARIA",
+            "CASTILLO SARITAMA LUIS ALEXANDER", "CRUZ VELASCO STEFANIE YULIANA", "CUENCA CALVA YUSELLY DAYANNA",
+            "ESPINOZA AREVALO ERICKA DAYANNA", "ESPINOZA CASTILLO JEFFERSON ROLANDO", "GUARNIZO SARANGO XIOMARA PAULETTE",
+            "GUTIERREZ RAMON AXEL XAVIER", "JARAMILLO MORALES XIMENA KAROLINA", "JUMBO SARANGO JEFFERSON VICENTE",
+            "LIANG FAREZ BAO YU", "MANZANO RAMIREZ GABRIELA ALEXANDRA", "MASAPANTA FLORES VICTOR MANUEL",
+            "MAZA CHUYA EMILY GABRIELA", "MEDINA SANCHEZ CRISTOPHER ADRIAN", "MENDOZA MANZANO KEVIN MANUEL",
+            "MOROCHO VILLALTA ESTEFANY MARIBEL", "MOROCHO VILLALTA JOSE ALEXANDER", "NAZARENO NAZARENO ALEXANDRA NOEMI",
+            "ORDOÑEZ BELTRAN ANGELA EUNICE", "REYES BEDOYA MARIA ISABEL", "RODRIGUEZ ROMERO ELVIS DANIEL",
+            "ROMERO JIMENEZ GRACIELA MERCEDES", "SANCHEZ ORDOÑEZ FELIX ADOLFO", "SARANGO NARVAEZ DILAN JOSUE",
+            "SOTO PUCHA ESNEIDER ANDRES", "VIVANCO SARITAMA JENNER ANDRY", "ZUMBA ESPINOZA LUIS FERNANDO"
+        ];
+
+        const interviewFormStructure = [
+            {
+                component: "COMPONENTE 1: HABILIDADES COGNITIVAS",
+                skills: [
+                    {
+                        title: "1.- Autoconocimiento",
+                        objective: "Mostrar una identidad coherente con sus intereses y aspiraciones.",
+                        questions: [
+                            { id: "c1_s1_q1", text: "¿Qué características propias te hacen único/a?" },
+                            { id: "c1_s1_q2", text: "¿Qué características propias crees que, podría mejorar?" },
+                            { id: "c1_s1_q3", text: "¿Qué características propias (cualidades) te ayudarían a cumplir las metas?" }
+                        ]
+                    },
+                    {
+                        title: "2.- Pensamiento crítico",
+                        objective: "Utilizar el razonamiento lógico para formar opiniones informadas.",
+                        questions: [
+                            { id: "c1_s2_q1", text: "Cuando te encuentras ante un problema de difícil solución ¿Qué sueles hacer en primer lugar?" },
+                            { id: "c1_s2_q2", text: "¿Cómo evalúas la información antes de formar una opinión?" }
+                        ]
+                    },
+                    {
+                        title: "3.- Manejo de problemas",
+                        objective: "Identificar problemas en diferentes contextos y plantear soluciones reflexionando sobre el proceso y los resultados.",
+                        questions: [
+                            { id: "c1_s3_q1", text: "¿Cómo abordas los desafíos que enfrentas en tu vida diaria?" },
+                            { id: "c1_s3_q2", text: "¿Cuáles son algunas estrategias que utilizas para resolver problemas?" },
+                            { id: "c1_s3_q3", text: "¿A quién o quiénes acudes para que te apoyen en la resolución de desafíos que enfrentas en tu vida diaria?" }
+                        ]
+                    },
+                    {
+                        title: "4.- Toma de decisiones",
+                        objective: "Considerar metas personales, valores, habilidades y oportunidades para tomar decisiones a corto y largo plazo.",
+                        questions: [
+                            { id: "c1_s4_q1", text: "¿Qué factores consideras antes de tomar una decisión?" },
+                            { id: "c1_s4_q2", text: "¿Cuáles son tus proyectos o metas a futuro?" },
+                            { id: "c1_s4_q3", text: "¿Hay algo que podría resultar una barrera o dificultad para cumplir lo que te propones?" }
+                        ]
+                    }
+                ]
+            },
+            {
+                component: "HABILIDADES SOCIALES",
+                skills: [
+                     {
+                        title: "5.- Pensamiento ético",
+                        objective: "Reflexionar sobre los sistemas de valores personales y sociales, y promover la justicia y la equidad.",
+                        questions: [
+                            { id: "c2_s1_q1", text: "¿Cuáles son tus principios éticos fundamentales?" },
+                            { id: "c2_s1_q2", text: "¿Cómo promueves la justicia y la equidad?" }
+                        ]
+                    },
+                    {
+                        title: "6.- Empatía",
+                        objective: "Demostrar una actitud de inclusión y respeto hacia la diversidad.",
+                        questions: [
+                            { id: "c2_s2_q1", text: "¿Qué actitud tomas para establecer comunicación con personas cuya forma de pensar es muy distinta a la tuya?" },
+                            { id: "c2_s2_q2", text: "¿Qué harías si llegas a ver a un grupo de personas que excluyen a alguien de su grupo?" }
+                        ]
+                    },
+                    {
+                        title: "7.- Manejo de conflictos",
+                        objective: "Reconocer y analizar las causas subyacentes de los conflictos, y resolver los desacuerdos de manera justa y respetuosa.",
+                        questions: [
+                            { id: "c2_s3_q1", text: "¿Cuál es la mejor manera de llegar a acuerdos frente a una situación que genera malestar entre dos o más personas? ¿Por qué?" },
+                            { id: "c2_s3_q2", text: "¿Qué haces para restablecer la comunicación luego de ocurrido un conflicto entre dos o más personas que conoces?" }
+                        ]
+                    },
+                    {
+                        title: "8.- Conciencia global",
+                        objective: "Analizar problemas sociales a nivel global y aportar con acciones personales que contribuyan a las soluciones.",
+                        questions: [
+                            { id: "c2_s4_q1", text: "¿Cuál consideras que es tu aporte en la resolución de situaciones de preocupación mundial, como es el calentamiento global, la contaminación ambiental, etc.?" },
+                            { id: "c2_s4_q2", text: "¿Cómo aportarías en la prevención de problemáticas del mundo actual?" }
+                        ]
+                    }
+                ]
+            },
+            {
+                component: "HABILIDAD EMOCIONAL",
+                skills: [
+                    {
+                        title: "9.- Manejo de emociones y sentimientos",
+                        objective: "Utilizar estrategias de autorregulación y demostrar habilidades de empatía y apoyo emocional hacia los demás.",
+                        questions: [
+                            { id: "c3_s1_q1", text: "¿Qué consideras que se debe hacer cuando una persona no se siente bien emocionalmente?" },
+                            { id: "c3_s1_q2", text: "¿Qué estrategias utilizas para manejar tus emociones?" }
+                        ]
+                    }
+                ]
+            },
+            {
+                component: "COMPONENTE 2: ENTORNO FAMILIAR Y ESCOLAR",
+                skills: [
+                    {
+                        title: "Entorno Familiar",
+                        objective: "Identificar los valores y la influencia de su familia en su desarrollo personal.",
+                        questions: [
+                            { id: "c4_s1_q1", text: "¿Cómo influye tu entorno familiar en tu desarrollo personal?" },
+                            { id: "c4_s1_q2", text: "¿Cuáles son los valores que definen a tu familia?" }
+                        ]
+                    },
+                    {
+                        title: "Entorno Escolar",
+                        objective: "Identificar cómo influyen sus amigos/as en sus acciones y, reconocer situaciones de protección dentro de la institución educativa.",
+                        questions: [
+                            { id: "c4_s2_q1", text: "¿En qué situaciones te sientes presionado por tus compañeros y compañeras de clase?" },
+                            { id: "c4_s2_q2", text: "¿Qué situaciones consideras tú que son riesgosas en la institución educativa? y ¿Por qué?" }
+                        ]
+                    }
+                ]
+            },
+            {
+                component: "COMPONENTE 3: ESTADO EMOCIONAL",
+                skills: [
+                    {
+                        title: "Estado Emocional General", 
+                        objective: "Describir con seguridad su estado emocional.",
+                        questions: [
+                            { id: "c5_s1_q1", text: "¿Cómo te sientes en general en este momento de tu vida?" },
+                            { id: "c5_s1_q2", text: "¿Hay algo en particular en este momento que te preocupe o te haga feliz?" }
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const studentSelect = document.getElementById('studentName');
+            studentList.forEach(student => {
+                const option = document.createElement('option');
+                option.value = student;
+                option.textContent = student;
+                studentSelect.appendChild(option);
+            });
+
+            const questionsContainer = document.getElementById('interviewQuestionsContainer');
+            interviewFormStructure.forEach(componentData => {
+                const componentSectionDiv = document.createElement('div');
+                componentSectionDiv.className = 'component-section'; 
+
+                const componentTitle = document.createElement('h3'); 
+                componentTitle.className = 'component-title';
+                componentTitle.textContent = componentData.component;
+                componentSectionDiv.appendChild(componentTitle);
+
+                componentData.skills.forEach(skillData => {
+                    const skillGroupDiv = document.createElement('div');
+                    skillGroupDiv.className = 'skill-group'; 
+
+                    const skillTitle = document.createElement('h4'); 
+                    skillTitle.className = 'skill-title';
+                    skillTitle.textContent = skillData.title;
+                    skillGroupDiv.appendChild(skillTitle);
+                    
+                    const skillObjective = document.createElement('p');
+                    skillObjective.className = 'skill-objective';
+                    skillObjective.innerHTML = `<em>Objetivo: ${skillData.objective}</em>`;
+                    skillGroupDiv.appendChild(skillObjective);
+
+                    const questionsListDiv = document.createElement('div');
+                    questionsListDiv.className = 'space-y-4 mt-2'; 
+
+                    skillData.questions.forEach(question => {
+                        const questionDiv = document.createElement('div');
+                        questionDiv.className = 'mb-3'; 
+                        
+                        const label = document.createElement('label');
+                        label.htmlFor = question.id;
+                        label.className = 'question-label';
+                        label.textContent = question.text;
+                        questionDiv.appendChild(label);
+
+                        const textarea = document.createElement('textarea');
+                        textarea.id = question.id;
+                        textarea.name = question.id;
+                        textarea.rows = "3";
+                        textarea.setAttribute('data-question-text', question.text); 
+                        textarea.placeholder = "Escribe tu respuesta aquí...";
+                        questionDiv.appendChild(textarea);
+                        questionsListDiv.appendChild(questionDiv);
+                    });
+                    skillGroupDiv.appendChild(questionsListDiv);
+                    componentSectionDiv.appendChild(skillGroupDiv);
+                });
+                questionsContainer.appendChild(componentSectionDiv);
+            });
+
+            // Botón Limpiar Funcionalidad
+            const clearButton = document.getElementById('clearButton');
+            clearButton.addEventListener('click', function() {
+                // Resetear el selector de estudiante
+                if (studentSelect) {
+                    studentSelect.selectedIndex = 0; // Selecciona la primera opción ("Seleccione un estudiante")
+                }
+
+                // Limpiar todos los textareas
+                const textareas = questionsContainer.getElementsByTagName('textarea');
+                for (let i = 0; i < textareas.length; i++) {
+                    textareas[i].value = '';
+                }
+
+                // Opcional: Scroll al inicio del formulario
+                // window.scrollTo({ top: formCard.offsetTop, behavior: 'smooth' }); 
+                // O al inicio de la página:
+                // window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+
+            const downloadButton = document.getElementById('downloadButton');
+            downloadButton.addEventListener('click', function () {
+                const exportRoot = document.createElement('div');
+                exportRoot.id = 'interviewContentForWordExport'; 
+
+                const headerDiv = document.createElement('div');
+                headerDiv.style.textAlign = 'center';
+                const sealImg = document.getElementById('schoolSeal').cloneNode(true);
+                sealImg.className = 'school-seal-word'; 
+                headerDiv.appendChild(sealImg);
+
+                const schoolNameH1 = document.createElement('h1');
+                schoolNameH1.className = 'school-name-word';
+                schoolNameH1.textContent = "UNIDAD EDUCATIVA DR. CAMILO GALLEGOS DOMÍNGUEZ";
+                headerDiv.appendChild(schoolNameH1);
+                exportRoot.appendChild(headerDiv);
+                
+                const formTitleH2 = document.createElement('h2');
+                formTitleH2.className = 'section-title-word'; 
+                formTitleH2.style.textAlign = 'center'; 
+                formTitleH2.textContent = document.querySelector('.form-main-title').textContent;
+                exportRoot.appendChild(formTitleH2);
+
+                const formSubtitleP = document.createElement('p');
+                formSubtitleP.style.textAlign = 'center';
+                formSubtitleP.style.fontSize = '10pt';
+                formSubtitleP.style.marginBottom = '15px';
+                formSubtitleP.textContent = document.querySelector('.form-subtitle').textContent;
+                exportRoot.appendChild(formSubtitleP);
+
+                const infoSectionDiv = document.createElement('div');
+                infoSectionDiv.style.marginBottom = '20px';
+
+                function addInfoItem(label, value) {
+                    const p = document.createElement('p');
+                    p.className = 'info-item-word';
+                    const strong = document.createElement('strong');
+                    strong.textContent = label + ": ";
+                    p.appendChild(strong);
+                    p.appendChild(document.createTextNode(value));
+                    infoSectionDiv.appendChild(p);
+                }
+                
+                addInfoItem("Fecha de la entrevista", document.getElementById('interviewDate').textContent);
+                addInfoItem("Entrevistador/a", document.getElementById('interviewerName').textContent);
+                const selectedStudentName = document.getElementById('studentName').value;
+                addInfoItem("Nombre del estudiante", selectedStudentName || "[Estudiante no seleccionado]");
+                addInfoItem("Curso", document.getElementById('studentCourse').textContent);
+                exportRoot.appendChild(infoSectionDiv);
+
+                interviewFormStructure.forEach(componentData => {
+                    const componentTitleH3 = document.createElement('h3');
+                    componentTitleH3.className = 'section-title-word'; 
+                    componentTitleH3.textContent = componentData.component;
+                    exportRoot.appendChild(componentTitleH3);
+
+                    componentData.skills.forEach(skillData => {
+                        const skillTitleH4 = document.createElement('h4');
+                        skillTitleH4.className = 'question-group-title-word'; 
+                        skillTitleH4.textContent = skillData.title;
+                        exportRoot.appendChild(skillTitleH4);
+
+                        const objectiveP = document.createElement('p');
+                        objectiveP.className = 'question-objective-word';
+                        objectiveP.innerHTML = `<em>Objetivo: ${skillData.objective}</em>`;
+                        exportRoot.appendChild(objectiveP);
+
+                        skillData.questions.forEach(question => {
+                            const questionP = document.createElement('p');
+                            questionP.className = 'question-label-word';
+                            questionP.textContent = question.text;
+                            exportRoot.appendChild(questionP);
+
+                            const answerDiv = document.createElement('div');
+                            answerDiv.className = 'answer-space-word';
+                            const textarea = document.getElementById(question.id);
+                            answerDiv.textContent = textarea ? (textarea.value || "[Sin respuesta]") : "[Error al obtener respuesta]";
+                            exportRoot.appendChild(answerDiv);
+                        });
+                    });
+                });
+                
+                let contentHtml = exportRoot.innerHTML;
+
+                let fullHtml = `
+                    <!DOCTYPE html>
+                    <html lang="es">
+                    <head>
+                        <meta charset="UTF-8">
+                        <style>
+                            body { font-family: Arial, sans-serif; font-size: 11pt; color: #000000; }
+                            .school-seal-word { width: 80px; height: 80px; display: block; margin: 0 auto 10px auto; }
+                            .school-name-word { text-align: center; font-size: 16pt; font-weight: bold; margin-bottom: 10px; }
+                            .info-item-word { margin-bottom: 6px; font-size: 11pt; }
+                            .section-title-word { font-size: 13pt; font-weight: bold; margin-top: 15px; margin-bottom: 8px; border-bottom: 1px solid #000000; padding-bottom: 2px; }
+                            .question-group-title-word { font-size: 12pt; font-weight: bold; margin-top: 10px; margin-bottom: 4px; }
+                            .question-objective-word { font-size: 10pt; font-style: italic; margin-bottom: 5px; color: #333333;}
+                            .question-label-word { font-size: 11pt; margin-bottom: 2px; display:block; font-weight: normal; }
+                            .answer-space-word { 
+                                width: 98%; 
+                                border: 1px solid #cccccc; 
+                                min-height: 40px; 
+                                margin-bottom: 8px; 
+                                padding: 4px; 
+                                background-color: #f9f9f9; 
+                                page-break-inside: avoid;
+                                white-space: pre-wrap; /* Para conservar saltos de línea en respuestas */
+                            }
+                        </style>
+                    </head>
+                    <body>${contentHtml}</body>
+                    </html>`;
+                
+                var converted = htmlDocx.asBlob(fullHtml);
+                
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(converted);
+                link.download = `Entrevista_${selectedStudentName.replace(/ /g, '_') || 'Estudiante'}.docx`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(link.href);
+            });
+        });
+    </script>
+</body>
+</html>
